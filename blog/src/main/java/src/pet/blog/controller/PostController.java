@@ -1,0 +1,100 @@
+package src.pet.blog.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import src.pet.blog.controller.dto.PostDtoResponse;
+import src.pet.blog.service.PostService;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("api/posts")
+@RequiredArgsConstructor
+public class PostController {
+
+    private final PostService postService;
+
+
+    @GetMapping("/{postId}")
+    @Operation(
+            summary = "Получить конкретный пост",
+            description = "Возвращает пост по его идентификатору"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Пост найден",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Невалидные входные данные",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Пост не найден",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<PostDtoResponse> getConcretePost(@PathVariable UUID postId){
+        return ResponseEntity.ok(postService.getConcretePost(postId));
+    }
+
+/*
+    No autorith
+    GET    /api/posts              - список постов с пагинацией и фильтрацией
+    GET    /api/posts/{id}         - получить конкретный пост
+    написал функциональность + хэндлер на ошибки/ осталось написать тесты и эндпоинт готов
+    GET    /api/posts/{id}/comments - комментарии к посту
+    GET    /api/tags               - список тегов
+    POST   /api/auth/login         - вход
+    POST   /api/auth/register      - регистрация
+ */
+
+
+/*
+    Autorith
+    POST   /api/posts              - создать пост
+    PUT    /api/posts/{id}         - обновить пост (только автор или админ)
+    DELETE /api/posts/{id}         - удалить пост
+    POST   /api/posts/{id}/comments - добавить комментарий
+    PUT    /api/comments/{id}      - обновить комментарий
+    DELETE /api/comments/{id}      - удалить комментарий
+*/
+
+/*
+    Admin requests
+    GET    /api/admin/users        - список пользователей
+    PUT    /api/admin/users/{id}/role - изменить роль пользователя
+    DELETE /api/admin/posts/{id}   - удалить любой пост
+    DELETE /api/admin/comments/{id} - удалить любой комментарий
+
+*/
+}
