@@ -1,7 +1,9 @@
 package src.pet.blog.service.impl;
 
 import org.springframework.stereotype.Service;
+import src.pet.blog.controller.dto.CommentDtoResponse;
 import src.pet.blog.controller.dto.PostDtoResponse;
+import src.pet.blog.model.Comment;
 import src.pet.blog.model.Post;
 
 @Service
@@ -14,6 +16,13 @@ public class PostMapperService {
                 .content(post.getTitle())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
+                .build();
+    }
+
+    public CommentDtoResponse toCommentDto(Comment comment){
+        return CommentDtoResponse.builder()
+                .text(comment.getText())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }
