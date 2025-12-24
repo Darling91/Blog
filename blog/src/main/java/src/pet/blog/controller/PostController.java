@@ -6,14 +6,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import src.pet.blog.controller.dto.CommentDtoResponse;
 import src.pet.blog.controller.dto.PostDtoResponse;
+import src.pet.blog.service.CommentService;
 import src.pet.blog.service.PostService;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping
     @Operation(
@@ -105,13 +107,60 @@ public class PostController {
         return ResponseEntity.ok(postService.getConcretePost(postId));
     }
 
+    @GetMapping("/comments/{postId}")
+    @Operation(
+            summary = "Получить коментарии к посту",
+            description = "Возвращает коментарии по идентификатору поста"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "возвращает список коментариев",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Невалидные входные данные",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Нет коментариев",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<List<CommentDtoResponse>> getComments(@PathVariable UUID postId){
+        return ResponseEntity.ok(commentService.getAllCommentsForPosts(postId));
+    }
+
 /*
     No autorith
     GET    /api/posts              - список постов с пагинацией и фильтрацией
+    написал функицональность + ошибку/интеграционники не проходят
+    --------------------------------------------------------------------------
     GET    /api/posts/{id}         - получить конкретный пост
     написал функциональность + хэндлер на ошибки + юнит тесты
+    --------------------------------------------------------------------------
     GET    /api/posts/{id}/comments - комментарии к посту
-    GET    /api/tags               - список тегов
+
+    --------------------------------------------------------------------------
     POST   /api/auth/login         - вход
     POST   /api/auth/register      - регистрация
  */
