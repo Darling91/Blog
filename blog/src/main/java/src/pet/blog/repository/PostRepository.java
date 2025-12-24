@@ -9,6 +9,5 @@ import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
 
-    @Query("select p from Post p where p.id =: postId")
-    Post getConcretePost(UUID postId);
+
 }

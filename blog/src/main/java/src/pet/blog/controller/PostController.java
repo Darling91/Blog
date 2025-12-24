@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import src.pet.blog.controller.dto.PostDtoResponse;
 import src.pet.blog.service.PostService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,6 +25,41 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping
+    @Operation(
+            summary = "Получить список постов",
+            description = "Возвращает все посты что есть"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возврат постов",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Пост не найден",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostDtoResponse.class)
+                    )
+            )
+    })
+    public List<PostDtoResponse> getAllPosts(){
+        return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK).getBody();
+    }
 
 
     @GetMapping("/{postId}")
@@ -71,7 +109,7 @@ public class PostController {
     No autorith
     GET    /api/posts              - список постов с пагинацией и фильтрацией
     GET    /api/posts/{id}         - получить конкретный пост
-    написал функциональность + хэндлер на ошибки/ осталось написать тесты и эндпоинт готов
+    написал функциональность + хэндлер на ошибки + юнит тесты
     GET    /api/posts/{id}/comments - комментарии к посту
     GET    /api/tags               - список тегов
     POST   /api/auth/login         - вход
