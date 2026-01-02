@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import src.pet.blog.controller.dto.PostDtoResponse;
+import src.pet.blog.controller.dto.RegisterDtoFromAuthorService;
 import src.pet.blog.exception.ExceptionMessages;
 import src.pet.blog.exception.exceptions.BadRequestException;
 import src.pet.blog.exception.exceptions.NotFoundException;

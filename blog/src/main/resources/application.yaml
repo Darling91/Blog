@@ -8,8 +8,12 @@ spring:
       username: admin
       password: qwerty
     url: jdbc:postgresql://localhost:5432/blog_db
+  kafka:
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 server:
-  port: 8080
+  port: 8082
 logging:
   level:
     org.springframework.orm.jpa: INFO
