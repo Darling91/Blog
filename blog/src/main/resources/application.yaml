@@ -16,10 +16,21 @@ server:
   port: 8082
 logging:
   level:
-    org.springframework.orm.jpa: INFO
-    org.springframework.transaction: INFO
+    org.springframework.transaction: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.orm.jpa.JpaTransactionManager: TRACE
     org.springframework.transaction.interceptor: TRACE
-    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
+    org.springframework.transaction.support: TRACE
+
+    # SQL запросы и параметры (ОЧЕНЬ важно!)
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.loader.Loader: TRACE
+    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
+    org.hibernate.engine.internal.TwoPhaseLoad: TRACE
+    org.hibernate.persister.entity.AbstractEntityPersister: DEBUG
+
 
 springdoc:
   api-docs:
